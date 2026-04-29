@@ -42,6 +42,7 @@
 #include "hw_key.h"
 #include "LCD_1315/driver_ssd1315.h"
 #include "LCD_1315/driver_ssd1315_advance.h"
+#include "LCD_UNI_DRIVER/lcd_uni.h"
 
 # define CIRCLE_DIG 407
 # define SLOW_PERCENTAGE 20.409 //电机减速比
@@ -65,14 +66,16 @@ int main(void)
 {
     SYSCFG_DL_init();
 
-    if (ssd1315_advance_init(SSD1315_INTERFACE_IIC, SSD1315_ADDR_SA0_0) != 0)
+    // 枚举LCD_TYPE_SSD1315或LCD_TYPE_ST7735
+    lcd_uni_set_type(LCD_TYPE_SSD1315);
+    if (lcd_uni_init() != 0)
     {
-        while(1);
+        while(1);// lcd not ready
     }
 
-    ssd1315_advance_clear();
-    ssd1315_advance_string(0, 0, "Hello SSD1315!", 14, 1, SSD1315_FONT_16);
-    // ssd1315_advance_rect(10, 40, 118, 60, 1);
+    lcd_uni_clear(0);
+    lcd_uni_show_string(0, 0, "ceshiabc123!", 1, 16);
+    lcd_uni_fill_rect(10, 40, 118, 60, 1);
 
     while(1)
     {
