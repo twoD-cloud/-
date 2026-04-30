@@ -3,7 +3,15 @@
 
 void LCD_GPIO_Init(void)
 {
+    // // 配置LCD控制引脚为数字输出
+    // DL_GPIO_initDigitalOutput(LCD_RES_IOMUX);
+    // DL_GPIO_initDigitalOutput(LCD_DC_IOMUX);
+    // DL_GPIO_initDigitalOutput(LCD_CS_IOMUX);
+    // DL_GPIO_initDigitalOutput(LCD_BLK_IOMUX);
 
+    // // 初始状态：所有引脚置低
+    // DL_GPIO_clearPins(LCD_PORT, LCD_RES_PIN | LCD_DC_PIN | LCD_CS_PIN | LCD_BLK_PIN);
+    // DL_GPIO_enableOutput(LCD_PORT, LCD_RES_PIN | LCD_DC_PIN | LCD_CS_PIN | LCD_BLK_PIN);
 }
 
 
@@ -33,9 +41,9 @@ void LCD_Writ_Bus(u8 dat)
 
 
 /******************************************************************************
-      ����˵����LCDд������
-      ������ݣ�dat д�������
-      ����ֵ��  ��
+      函数说明：LCD写数据8位
+      入口数据：dat 写入的数据
+      返回值：  无
 ******************************************************************************/
 void LCD_WR_DATA8(u8 dat)
 {
@@ -44,9 +52,9 @@ void LCD_WR_DATA8(u8 dat)
 
 
 /******************************************************************************
-      ����˵����LCDд������
-      ������ݣ�dat д�������
-      ����ֵ��  ��
+      函数说明：LCD写数据16位
+      入口数据：dat 写入的数据
+      返回值：  无
 ******************************************************************************/
 void LCD_WR_DATA(u16 dat)
 {
@@ -56,79 +64,79 @@ void LCD_WR_DATA(u16 dat)
 
 
 /******************************************************************************
-      ����˵����LCDд������
-      ������ݣ�dat д�������
-      ����ֵ��  ��
+      函数说明：LCD写命令
+      入口数据：dat 写入的数据
+      返回值：  无
 ******************************************************************************/
 void LCD_WR_REG(u8 dat)
 {
-	LCD_DC_Clr();//д����
+	LCD_DC_Clr();//写命令
 	LCD_Writ_Bus(dat);
-	LCD_DC_Set();//д����
+	LCD_DC_Set();//写数据
 }
 
 
 /******************************************************************************
-      ����˵����������ʼ�ͽ�����ַ
-      ������ݣ�x1,x2 �����е���ʼ�ͽ�����ַ
-                y1,y2 �����е���ʼ�ͽ�����ַ
-      ����ֵ��  ��
+      函数说明：设置起始和结束地址
+      入口数据：x1,x2 列方向的起始和结束地址
+                y1,y2 行方向的起始和结束地址
+      返回值：  无
 ******************************************************************************/
 void LCD_Address_Set(u16 x1,u16 y1,u16 x2,u16 y2)
 {
 	if(USE_HORIZONTAL==0)
 	{
-		LCD_WR_REG(0x2a);//�е�ַ����
+		LCD_WR_REG(0x2a);//列地址设置
 		LCD_WR_DATA(x1+26);
 		LCD_WR_DATA(x2+26);
-		LCD_WR_REG(0x2b);//�е�ַ����
+		LCD_WR_REG(0x2b);//行地址设置
 		LCD_WR_DATA(y1+1);
 		LCD_WR_DATA(y2+1);
-		LCD_WR_REG(0x2c);//������д
+		LCD_WR_REG(0x2c);//写入数据
 	}
 	else if(USE_HORIZONTAL==1)
 	{
-		LCD_WR_REG(0x2a);//�е�ַ����
+		LCD_WR_REG(0x2a);//列地址设置
 		LCD_WR_DATA(x1+26);
 		LCD_WR_DATA(x2+26);
-		LCD_WR_REG(0x2b);//�е�ַ����
+		LCD_WR_REG(0x2b);//行地址设置
 		LCD_WR_DATA(y1+1);
 		LCD_WR_DATA(y2+1);
-		LCD_WR_REG(0x2c);//������д
+		LCD_WR_REG(0x2c);//写入数据
 	}
 	else if(USE_HORIZONTAL==2)
 	{
-		LCD_WR_REG(0x2a);//�е�ַ����
+		LCD_WR_REG(0x2a);//列地址设置
 		LCD_WR_DATA(x1+1);
 		LCD_WR_DATA(x2+1);
-		LCD_WR_REG(0x2b);//�е�ַ����
+		LCD_WR_REG(0x2b);//行地址设置
 		LCD_WR_DATA(y1+26);
 		LCD_WR_DATA(y2+26);
-		LCD_WR_REG(0x2c);//������д
+		LCD_WR_REG(0x2c);//写入数据
 	}
 	else
 	{
-		LCD_WR_REG(0x2a);//�е�ַ����
+		LCD_WR_REG(0x2a);//列地址设置
 		LCD_WR_DATA(x1+1);
 		LCD_WR_DATA(x2+1);
-		LCD_WR_REG(0x2b);//�е�ַ����
+		LCD_WR_REG(0x2b);//行地址设置
 		LCD_WR_DATA(y1+26);
 		LCD_WR_DATA(y2+26);
-		LCD_WR_REG(0x2c);//������д
+		LCD_WR_REG(0x2c);//写入数据
 	}
 }
 
 void LCD_Init(void)
 {
-	LCD_GPIO_Init();//��ʼ��GPIO
+	LCD_GPIO_Init();//初始化GPIO
 	
-	LCD_RES_Clr();//��λ
+	LCD_RES_Clr();//复位
 	delay_ms(100);
 	LCD_RES_Set();
 	delay_ms(100);
 	
-	LCD_BLK_Set();//�򿪱���
-  delay_ms(100);
+	LCD_BLK_Set();//打开背光
+  	delay_ms(100);
 	
 	LCD_WR_REG(0x11);     //Sleep out
 	delay_ms(120);                //Delay 120ms

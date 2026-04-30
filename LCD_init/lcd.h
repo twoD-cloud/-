@@ -3,23 +3,22 @@
 #include "board.h"
 
 
-void LCD_Fill(u16 xsta,u16 ysta,u16 xend,u16 yend,u16 color);//ָ�����������ɫ
-void LCD_DrawPoint(u16 x,u16 y,u16 color);//��ָ��λ�û�һ����
-void LCD_DrawLine(u16 x1,u16 y1,u16 x2,u16 y2,u16 color);//��ָ��λ�û�һ����
-void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2,u16 color);//��ָ��λ�û�һ������
-void Draw_Circle(u16 x0,u16 y0,u8 r,u16 color);//��ָ��λ�û�һ��Բ
+void LCD_Fill(u16 xsta,u16 ysta,u16 xend,u16 yend,u16 color);//指定区域内填充颜色
+void LCD_DrawPoint(u16 x,u16 y,u16 color);//在指定位置画一个点
+void LCD_DrawLine(u16 x1,u16 y1,u16 x2,u16 y2,u16 color);//在指定位置画一条线
+void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2,u16 color);//在指定位置画一个矩形
+void Draw_Circle(u16 x0,u16 y0,u8 r,u16 color);//在指定位置画一个圆
+
+void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode);//显示一个字符
+void LCD_ShowString(u16 x,u16 y,const u8 *p,u16 fc,u16 bc,u8 sizey,u8 mode);//显示字符串
+u32 mypow(u8 m,u8 n);//运算
+void LCD_ShowIntNum(u16 x,u16 y,u16 num,u8 len,u16 fc,u16 bc,u8 sizey);//显示整数数字
+void LCD_ShowFloatNum1(u16 x,u16 y,float num,u8 len,u16 fc,u16 bc,u8 sizey);//显示一位小数数字
+
+void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[]);//显示图片
 
 
-void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode);//��ʾһ���ַ�
-void LCD_ShowString(u16 x,u16 y,const u8 *p,u16 fc,u16 bc,u8 sizey,u8 mode);//��ʾ�ַ���
-u32 mypow(u8 m,u8 n);//����
-void LCD_ShowIntNum(u16 x,u16 y,u16 num,u8 len,u16 fc,u16 bc,u8 sizey);//��ʾ��������
-void LCD_ShowFloatNum1(u16 x,u16 y,float num,u8 len,u16 fc,u16 bc,u8 sizey);//��ʾ��λС������
-
-void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[]);//��ʾͼƬ
-
-
-//������ɫ
+//显示颜色
 #define WHITE         	 0x0000
 #define BLACK         	 0xFFFF	  
 #define BLUE           	 0x001F  
@@ -31,16 +30,16 @@ void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[]);//��ʾ
 #define GREEN         	 0x07E0
 #define CYAN          	 0x7FFF
 #define YELLOW        	 0xFFE0
-#define BROWN 			     0XBC40 //��ɫ
-#define BRRED 			     0XFC07 //�غ�ɫ
-#define GRAY  			     0X8430 //��ɫ
-#define DARKBLUE      	 0X01CF	//����ɫ
-#define LIGHTBLUE      	 0X7D7C	//ǳ��ɫ  
-#define GRAYBLUE       	 0X5458 //����ɫ
-#define LIGHTGREEN     	 0X841F //ǳ��ɫ
-#define LGRAY 			     0XC618 //ǳ��ɫ(PANNEL),���屳��ɫ
-#define LGRAYBLUE        0XA651 //ǳ����ɫ(�м����ɫ)
-#define LBBLUE           0X2B12 //ǳ����ɫ(ѡ����Ŀ�ķ�ɫ)
+#define BROWN 			     0XBC40 //棕色
+#define BRRED 			     0XFC07 //棕红色
+#define GRAY  			     0X8430 //灰色
+#define DARKBLUE      	 0X01CF	//深蓝色
+#define LIGHTBLUE      	 0X7D7C	//浅蓝色  
+#define GRAYBLUE       	 0X5458 //灰蓝色
+#define LIGHTGREEN     	 0X841F //浅绿色
+#define LGRAY 			     0XC618 //浅灰色(PANNEL),字体背景色
+#define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
+#define LBBLUE           0X2B12 //浅蓝色(选择项的颜色)
 
 #endif
 

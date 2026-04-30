@@ -3,7 +3,7 @@
 
 #include "board.h"
 
-#define USE_HORIZONTAL 1  //���ú�������������ʾ 0��1Ϊ���� 2��3Ϊ����
+#define USE_HORIZONTAL 1  //设置横屏或者竖屏显示 0、1为竖屏 2、3为横屏
 #define background_color 0x001F
 
 #if USE_HORIZONTAL==0||USE_HORIZONTAL==1
@@ -17,8 +17,6 @@
 #endif
 
 
-
-//-----------------LCD�˿ڶ���---------------- 
 
 //-----------------LCD端口定义----------------
 
@@ -34,16 +32,13 @@
 #define LCD_BLK_Clr()  DL_GPIO_clearPins(LCD_PORT,LCD_BLK_PIN)//BLK
 #define LCD_BLK_Set()  DL_GPIO_setPins(LCD_PORT,LCD_BLK_PIN)
 
-
-
-
-void LCD_GPIO_Init(void);//��ʼ��GPIO
-void LCD_Writ_Bus(u8 dat);//ģ��SPIʱ��
-void LCD_WR_DATA8(u8 dat);//д��һ���ֽ�
-void LCD_WR_DATA(u16 dat);//д�������ֽ�
-void LCD_WR_REG(u8 dat);//д��һ��ָ��
-void LCD_Address_Set(u16 x1,u16 y1,u16 x2,u16 y2);//�������꺯��
-void LCD_Init(void);//LCD��ʼ��
+void LCD_GPIO_Init(void);//初始化GPIO
+void LCD_Writ_Bus(u8 dat);//模拟SPI时序
+void LCD_WR_DATA8(u8 dat);//写入一个字节
+void LCD_WR_DATA(u16 dat);//写入两个字节
+void LCD_WR_REG(u8 dat);//写入一个命令
+void LCD_Address_Set(u16 x1,u16 y1,u16 x2,u16 y2);//设置坐标函数
+void LCD_Init(void);//LCD初始化
 #endif
 
 

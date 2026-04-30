@@ -5,65 +5,65 @@
 
 
 /******************************************************************************
-      ����˵������ָ�����������ɫ
-      ������ݣ�xsta,ysta   ��ʼ����
-                xend,yend   ��ֹ����
-								color       Ҫ������ɫ
-      ����ֵ��  ��
+      函数说明：在指定区域内填充颜色
+      入口数据：xsta,ysta   起始坐标
+                xend,yend   终止坐标
+                color       要填充的颜色
+      返回值：  无
 ******************************************************************************/
 void LCD_Fill(u16 xsta,u16 ysta,u16 xend,u16 yend,u16 color)
-{          
-	u16 i,j; 
-	LCD_Address_Set(xsta,ysta,xend-1,yend-1);//������ʾ��Χ
+{
+	u16 i,j;
+	LCD_Address_Set(xsta,ysta,xend-1,yend-1);//设置显示范围
 	for(i=ysta;i<yend;i++)
-	{													   	 	
+	{
 		for(j=xsta;j<xend;j++)
 		{
 			LCD_WR_DATA(color);
 		}
-	} 					  	    
+	}
 }
 
 /******************************************************************************
-      ����˵������ָ��λ�û���
-      ������ݣ�x,y ��������
-                color �����ɫ
-      ����ֵ��  ��
+      函数说明：在指定位置画点
+      入口数据：x,y 点坐标
+                color 点的颜色
+      返回值：  无
 ******************************************************************************/
 void LCD_DrawPoint(u16 x,u16 y,u16 color)
 {
-	LCD_Address_Set(x,y,x,y);//���ù��λ�� 
+	LCD_Address_Set(x,y,x,y);//设置光标位置
 	LCD_WR_DATA(color);
-} 
+}
 
 
 /******************************************************************************
-      ����˵��������
-      ������ݣ�x1,y1   ��ʼ����
-                x2,y2   ��ֹ����
-                color   �ߵ���ɫ
-      ����ֵ��  ��
+      函数说明：画线
+      入口数据：x1,y1   起始坐标
+                x2,y2   终止坐标
+                color   线的颜色
+      返回值：  无
 ******************************************************************************/
 void LCD_DrawLine(u16 x1,u16 y1,u16 x2,u16 y2,u16 color)
 {
-	u16 t; 
+	u16 t;
 	int xerr=0,yerr=0,delta_x,delta_y,distance;
 	int incx,incy,uRow,uCol;
-	delta_x=x2-x1; //������������ 
+	delta_x=x2-x1; //计算坐标增量
 	delta_y=y2-y1;
-	uRow=x1;//�����������
+	uRow=x1;//设置起始点坐标
 	uCol=y1;
-	if(delta_x>0)incx=1; //���õ������� 
-	else if (delta_x==0)incx=0;//��ֱ�� 
+	if(delta_x>0)incx=1; //设置增量方向
+	else if (delta_x==0)incx=0;//垂直线
 	else {incx=-1;delta_x=-delta_x;}
 	if(delta_y>0)incy=1;
-	else if (delta_y==0)incy=0;//ˮƽ�� 
+	else if (delta_y==0)incy=0;//水平线
 	else {incy=-1;delta_y=-delta_y;}
-	if(delta_x>delta_y)distance=delta_x; //ѡȡ�������������� 
+	if(delta_x>delta_y)distance=delta_x; //选取最长轴方向
 	else distance=delta_y;
 	for(t=0;t<distance+1;t++)
 	{
-		LCD_DrawPoint(uRow,uCol,color);//����
+		LCD_DrawPoint(uRow,uCol,color);//画点
 		xerr+=delta_x;
 		yerr+=delta_y;
 		if(xerr>distance)
@@ -81,11 +81,11 @@ void LCD_DrawLine(u16 x1,u16 y1,u16 x2,u16 y2,u16 color)
 
 
 /******************************************************************************
-      ����˵����������
-      ������ݣ�x1,y1   ��ʼ����
-                x2,y2   ��ֹ����
-                color   ���ε���ɫ
-      ����ֵ��  ��
+      函数说明：画矩形
+      入口数据：x1,y1   起始坐标
+                x2,y2   终止坐标
+                color   矩形的颜色
+      返回值：  无
 ******************************************************************************/
 void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2,u16 color)
 {
@@ -97,28 +97,28 @@ void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2,u16 color)
 
 
 /******************************************************************************
-      ����˵������Բ
-      ������ݣ�x0,y0   Բ������
-                r       �뾶
-                color   Բ����ɫ
-      ����ֵ��  ��
+      函数说明：画圆
+      入口数据：x0,y0   圆心坐标
+                r       半径
+                color   圆的颜色
+      返回值：  无
 ******************************************************************************/
 void Draw_Circle(u16 x0,u16 y0,u8 r,u16 color)
 {
 	int a,b;
-	a=0;b=r;	  
+	a=0;b=r;
 	while(a<=b)
 	{
-		LCD_DrawPoint(x0-b,y0-a,color);             //3           
-		LCD_DrawPoint(x0+b,y0-a,color);             //0           
-		LCD_DrawPoint(x0-a,y0+b,color);             //1                
-		LCD_DrawPoint(x0-a,y0-b,color);             //2             
-		LCD_DrawPoint(x0+b,y0+a,color);             //4               
+		LCD_DrawPoint(x0-b,y0-a,color);             //3
+		LCD_DrawPoint(x0+b,y0-a,color);             //0
+		LCD_DrawPoint(x0-a,y0+b,color);             //1
+		LCD_DrawPoint(x0-a,y0-b,color);             //2
+		LCD_DrawPoint(x0+b,y0+a,color);             //4
 		LCD_DrawPoint(x0+a,y0-b,color);             //5
-		LCD_DrawPoint(x0+a,y0+b,color);             //6 
+		LCD_DrawPoint(x0+a,y0+b,color);             //6
 		LCD_DrawPoint(x0-b,y0+a,color);             //7
 		a++;
-		if((a*a+b*b)>(r*r))//�ж�Ҫ���ĵ��Ƿ��Զ
+		if((a*a+b*b)>(r*r))//判断点是否超出圆边界
 		{
 			b--;
 		}
@@ -129,34 +129,34 @@ void Draw_Circle(u16 x0,u16 y0,u8 r,u16 color)
 
 
 /******************************************************************************
-      ����˵������ʾ�����ַ�
-      ������ݣ�x,y��ʾ����
-                num Ҫ��ʾ���ַ�
-                fc �ֵ���ɫ
-                bc �ֵı���ɫ
-                sizey �ֺ�
-                mode:  0�ǵ���ģʽ  1����ģʽ
-      ����ֵ��  ��
+      函数说明：显示一个字符
+      入口数据：x,y 显示坐标
+                num 要显示的字符
+                fc 字的颜色
+                bc 字的背景色
+                sizey 字号
+                mode:  0非叠加模式  1叠加模式
+      返回值：  无
 ******************************************************************************/
 void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 {
 	u8 temp,sizex,t,m=0;
-	u16 i,TypefaceNum;//һ���ַ���ռ�ֽڴ�С
+	u16 i,TypefaceNum;//一个字符所占字节大小
 	u16 x0=x;
 	sizex=sizey/2;
 	TypefaceNum=(sizex/8+((sizex%8)?1:0))*sizey;
-	num=num-' ';    //�õ�ƫ�ƺ��ֵ
-	LCD_Address_Set(x,y,x+sizex-1,y+sizey-1);  //���ù��λ�� 
+	num=num-' ';    //得到偏移后的值
+	LCD_Address_Set(x,y,x+sizex-1,y+sizey-1);  //设置光标位置
 	for(i=0;i<TypefaceNum;i++)
-	{ 
-		if(sizey==12)temp=ascii_1206[num][i];		       //����6x12����
-		else if(sizey==16)temp=ascii_1608[num][i];		 //����8x16����
-		else if(sizey==24)temp=ascii_2412[num][i];		 //����12x24����
-		else if(sizey==32)temp=ascii_3216[num][i];		 //����16x32����
+	{
+		if(sizey==12)temp=ascii_1206[num][i];		       //加载6x12字库
+		else if(sizey==16)temp=ascii_1608[num][i];		 //加载8x16字库
+		else if(sizey==24)temp=ascii_2412[num][i];		 //加载12x24字库
+		else if(sizey==32)temp=ascii_3216[num][i];		 //加载16x32字库
 		else return;
 		for(t=0;t<8;t++)
 		{
-			if(!mode)//�ǵ���ģʽ
+			if(!mode)//非叠加模式
 			{
 				if(temp&(0x01<<t))LCD_WR_DATA(fc);
 				else LCD_WR_DATA(bc);
@@ -167,9 +167,9 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 					break;
 				}
 			}
-			else//����ģʽ
+			else//叠加模式
 			{
-				if(temp&(0x01<<t))LCD_DrawPoint(x,y,fc);//��һ����
+				if(temp&(0x01<<t))LCD_DrawPoint(x,y,fc);//画一个点
 				x++;
 				if((x-x0)==sizex)
 				{
@@ -179,56 +179,56 @@ void LCD_ShowChar(u16 x,u16 y,u8 num,u16 fc,u16 bc,u8 sizey,u8 mode)
 				}
 			}
 		}
-	}   	 	  
+	}
 }
 
 
 /******************************************************************************
-      ����˵������ʾ�ַ���
-      ������ݣ�x,y��ʾ����
-                *p Ҫ��ʾ���ַ���
-                fc �ֵ���ɫ
-                bc �ֵı���ɫ
-                sizey �ֺ�
-                mode:  0�ǵ���ģʽ  1����ģʽ
-      ����ֵ��  ��
+      函数说明：显示字符串
+      入口数据：x,y 显示坐标
+                *p 要显示的字符串
+                fc 字的颜色
+                bc 字的背景色
+                sizey 字号
+                mode:  0非叠加模式  1叠加模式
+      返回值：  无
 ******************************************************************************/
 void LCD_ShowString(u16 x,u16 y,const u8 *p,u16 fc,u16 bc,u8 sizey,u8 mode)
-{         
+{
 	while(*p!='\0')
-	{       
+	{
 		LCD_ShowChar(x,y,*p,fc,bc,sizey,mode);
 		x+=sizey/2;
 		p++;
-	}  
+	}
 }
 
 
 /******************************************************************************
-      ����˵������ʾ����
-      ������ݣ�m������nָ��
-      ����ֵ��  ��
+      函数说明：显示运算
+      入口数据：m底数，n指数
+      返回值：  无
 ******************************************************************************/
 u32 mypow(u8 m,u8 n)
 {
-	u32 result=1;	 
+	u32 result=1;
 	while(n--)result*=m;
 	return result;
 }
 
 
 /******************************************************************************
-      ����˵������ʾ��������
-      ������ݣ�x,y��ʾ����
-                num Ҫ��ʾ��������
-                len Ҫ��ʾ��λ��
-                fc �ֵ���ɫ
-                bc �ֵı���ɫ
-                sizey �ֺ�
-      ����ֵ��  ��
+      函数说明：显示整数数字
+      入口数据：x,y 显示坐标
+                num 要显示的整数数字
+                len 要显示的位数
+                fc 字的颜色
+                bc 字的背景色
+                sizey 字号
+      返回值：  无
 ******************************************************************************/
 void LCD_ShowIntNum(u16 x,u16 y,u16 num,u8 len,u16 fc,u16 bc,u8 sizey)
-{         	
+{
 	u8 t,temp;
 	u8 enshow=0;
 	u8 sizex=sizey/2;
@@ -241,26 +241,26 @@ void LCD_ShowIntNum(u16 x,u16 y,u16 num,u8 len,u16 fc,u16 bc,u8 sizey)
 			{
 				LCD_ShowChar(x+t*sizex,y,' ',fc,bc,sizey,0);
 				continue;
-			}else enshow=1; 
-		 	 
+			}else enshow=1;
+
 		}
 	 	LCD_ShowChar(x+t*sizex,y,temp+48,fc,bc,sizey,0);
 	}
-} 
+}
 
 
 /******************************************************************************
-      ����˵������ʾ��λС������
-      ������ݣ�x,y��ʾ����
-                num Ҫ��ʾС������
-                len Ҫ��ʾ��λ��
-                fc �ֵ���ɫ
-                bc �ֵı���ɫ
-                sizey �ֺ�
-      ����ֵ��  ��
+      函数说明：显示一位小数数字
+      入口数据：x,y 显示坐标
+                num 要显示的小数数字
+                len 要显示的位数
+                fc 字的颜色
+                bc 字的背景色
+                sizey 字号
+      返回值：  无
 ******************************************************************************/
 void LCD_ShowFloatNum1(u16 x,u16 y,float num,u8 len,u16 fc,u16 bc,u8 sizey)
-{         	
+{
 	u8 t,temp,sizex;
 	u16 num1;
 	sizex=sizey/2;
@@ -280,12 +280,12 @@ void LCD_ShowFloatNum1(u16 x,u16 y,float num,u8 len,u16 fc,u16 bc,u8 sizey)
 
 
 /******************************************************************************
-      ����˵������ʾͼƬ
-      ������ݣ�x,y�������
-                length ͼƬ����
-                width  ͼƬ����
-                pic[]  ͼƬ����    
-      ����ֵ��  ��
+      函数说明：显示图片
+      入口数据：x,y 显示坐标
+                length 图片宽度
+                width  图片高度
+                pic[]  图片数据
+      返回值：  无
 ******************************************************************************/
 void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[])
 {
@@ -300,7 +300,7 @@ void LCD_ShowPicture(u16 x,u16 y,u16 length,u16 width,const u8 pic[])
 			LCD_WR_DATA8(pic[k*2+1]);
 			k++;
 		}
-	}			
+	}
 }
 
 

@@ -3,7 +3,7 @@
  * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
  * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-64(PM)" --product "mspm0_sdk@2.10.00.04"
  * @v2CliArgs --device "MSPM0G3507" --package "LQFP-64(PM)" --product "mspm0_sdk@2.10.00.04"
- * @versions {"tool":"1.26.2+4477"}
+ * @versions {"tool":"1.27.0+4565"}
  */
 
 /**
@@ -16,6 +16,8 @@ const GPIO1  = GPIO.addInstance();
 const GPIO2  = GPIO.addInstance();
 const GPIO3  = GPIO.addInstance();
 const GPIO4  = GPIO.addInstance();
+const I2C    = scripting.addModule("/ti/driverlib/I2C", {}, false);
+const I2C1   = I2C.addInstance();
 const PWM    = scripting.addModule("/ti/driverlib/PWM", {}, false);
 const PWM1   = PWM.addInstance();
 const QEI    = scripting.addModule("/ti/driverlib/QEI", {}, false);
@@ -41,20 +43,23 @@ ADC121.adcPin0Config.hideOutputInversion = scripting.forceWrite(false);
 
 const Board = scripting.addModule("/ti/driverlib/Board", {}, false);
 
-GPIO1.$name                         = "LCD";
-GPIO1.port                          = "PORTB";
-GPIO1.associatedPins.create(4);
-GPIO1.associatedPins[0].ioStructure = "SD";
-GPIO1.associatedPins[0].assignedPin = "10";
-GPIO1.associatedPins[0].$name       = "RES";
-GPIO1.associatedPins[1].$name       = "DC";
-GPIO1.associatedPins[1].ioStructure = "SD";
-GPIO1.associatedPins[1].assignedPin = "11";
-GPIO1.associatedPins[2].$name       = "CS";
-GPIO1.associatedPins[2].ioStructure = "SD";
-GPIO1.associatedPins[2].assignedPin = "14";
-GPIO1.associatedPins[3].$name       = "BLK";
-GPIO1.associatedPins[3].assignedPin = "26";
+GPIO1.$name                          = "LCD";
+GPIO1.port                           = "PORTB";
+GPIO1.associatedPins.create(5);
+GPIO1.associatedPins[0].ioStructure  = "SD";
+GPIO1.associatedPins[0].assignedPin  = "10";
+GPIO1.associatedPins[0].$name        = "RES";
+GPIO1.associatedPins[1].$name        = "DC";
+GPIO1.associatedPins[1].ioStructure  = "SD";
+GPIO1.associatedPins[1].assignedPin  = "11";
+GPIO1.associatedPins[2].$name        = "CS";
+GPIO1.associatedPins[2].ioStructure  = "SD";
+GPIO1.associatedPins[2].assignedPin  = "14";
+GPIO1.associatedPins[3].$name        = "BLK";
+GPIO1.associatedPins[3].assignedPin  = "26";
+GPIO1.associatedPins[4].$name        = "PIN_0";
+GPIO1.associatedPins[4].initialValue = "SET";
+GPIO1.associatedPins[4].pin.$assign  = "PB22";
 
 GPIO2.$name                         = "MOTOR";
 GPIO2.port                          = "PORTA";
@@ -100,6 +105,20 @@ GPIO4.associatedPins[3].internalResistor = "PULL_UP";
 GPIO4.associatedPins[3].assignedPort     = "PORTA";
 GPIO4.associatedPins[3].assignedPin      = "27";
 GPIO4.associatedPins[3].$name            = "K3";
+
+I2C1.$name                             = "I2C_LCD";
+I2C1.basicEnableController             = true;
+I2C1.peripheral.$assign                = "I2C0";
+I2C1.peripheral.sdaPin.$assign         = "PA28";
+I2C1.peripheral.sclPin.$assign         = "PA31";
+I2C1.sdaPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric9";
+I2C1.sdaPinConfig.hideOutputInversion  = scripting.forceWrite(false);
+I2C1.sdaPinConfig.onlyInternalResistor = scripting.forceWrite(false);
+I2C1.sdaPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+I2C1.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric10";
+I2C1.sclPinConfig.hideOutputInversion  = scripting.forceWrite(false);
+I2C1.sclPinConfig.onlyInternalResistor = scripting.forceWrite(false);
+I2C1.sclPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
 
 PWM1.$name                              = "PWM_MOTOR";
 PWM1.clockDivider                       = 4;

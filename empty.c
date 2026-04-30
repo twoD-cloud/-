@@ -40,6 +40,10 @@
 #include "mid_button.h"
 #include "app_key_task.h"
 #include "hw_key.h"
+#include "LCD_1315/driver_ssd1315.h"
+#include "LCD_1315/driver_ssd1315_advance.h"
+#include "LCD_UNI_DRIVER/lcd_uni.h"
+
 # define CIRCLE_DIG 407
 # define SLOW_PERCENTAGE 20.409 //电机减速比
 # define ENCODER 13
@@ -60,77 +64,89 @@ uint32_t sys_time=0;
 
 int main(void)
 {
-    /* 系统初始化 */
     SYSCFG_DL_init();
-    LCD_Init(); // LCD初始化
-    LCD_Fill(0, 0, LCD_W,LCD_H,WHITE);
-    user_button_init(); 
+
+    // 枚举LCD_TYPE_SSD1315或LCD_TYPE_ST7735
+    lcd_uni_set_type(LCD_TYPE_SSD1315);
+    if (lcd_uni_init() != 0)
+    {
+        while(1);// lcd not ready
+    }
+
+    lcd_uni_clear(0);
+    lcd_uni_show_string(0, 0, "ceshiabc123!", 1, 16);
+    lcd_uni_fill_rect(10, 40, 118, 60, 1);
+
+    while(1)
+    {
+
+    }
 
 
-    /* 开启中断配置 */
-//    NVIC_EnableIRQ(ADC_voltage_INST_INT_IRQN);
-    NVIC_EnableIRQ(MOTOR_STOP_INT_IRQN);
-    NVIC_EnableIRQ(QEI_0_INST_INT_IRQN);
-    NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
-    NVIC_EnableIRQ(Button_INST_INT_IRQN);
+//     /* 开启中断配置 */
+// //    NVIC_EnableIRQ(ADC_voltage_INST_INT_IRQN);
+//     NVIC_EnableIRQ(MOTOR_STOP_INT_IRQN);
+//     NVIC_EnableIRQ(QEI_0_INST_INT_IRQN);
+//     NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
+//     NVIC_EnableIRQ(Button_INST_INT_IRQN);
 
-    /* 打开定时器 */
-    DL_TimerG_startCounter(PWM_MOTOR_INST);
-    DL_TimerA_startCounter(TIMER_0_INST);
-    DL_TimerG_startCounter(QEI_0_INST);
-    DL_TimerA_startCounter(Button_INST);
-
-
+//     /* 打开定时器 */
+//     DL_TimerG_startCounter(PWM_MOTOR_INST);
+//     DL_TimerA_startCounter(TIMER_0_INST);
+//     DL_TimerG_startCounter(QEI_0_INST);
+//     DL_TimerA_startCounter(Button_INST);
 
 
-    while (1) {
-        ADC_flag = false;
-//        DL_ADC12_startConversion(ADC_voltage_INST);
 
-        if (motor_flag)
-        {
-          //  MOTOR_Control(1,500);
-        }
-        else {
-            MOTOR_STOP();
-        }
 
-        // while (!ADC_flag)
-        // {
-        //     //等待信号
-        // }
-        /*ADC采集*/
-        DL_ADC12_enableConversions(ADC_voltage_INST);
-        digital_voltage = DL_ADC12_getMemResult(ADC_voltage_INST,ADC_voltage_ADCMEM_0);
-        analog_voltage = 3.3*(double_t)digital_voltage/(double_t)4095;
+//     while (1) {
+//         ADC_flag = false;
+// //        DL_ADC12_startConversion(ADC_voltage_INST);
 
-        get_digital = digital_voltage%CIRCLE_DIG;
-        angle = (float)get_digital*360/(float)CIRCLE_DIG;
-        n_speed = (float)(pulse*50)/(260);
+//         if (motor_flag)
+//         {
+//           //  MOTOR_Control(1,500);
+//         }
+//         else {
+//             MOTOR_STOP();
+//         }
+
+//         // while (!ADC_flag)
+//         // {
+//         //     //等待信号
+//         // }
+//         /*ADC采集*/
+//         DL_ADC12_enableConversions(ADC_voltage_INST);
+//         digital_voltage = DL_ADC12_getMemResult(ADC_voltage_INST,ADC_voltage_ADCMEM_0);
+//         analog_voltage = 3.3*(double_t)digital_voltage/(double_t)4095;
+
+//         get_digital = digital_voltage%CIRCLE_DIG;
+//         angle = (float)get_digital*360/(float)CIRCLE_DIG;
+//         n_speed = (float)(pulse*50)/(260);
   
 
-        /*显示*/
-        // LCD_ShowString(0,20,(const u8 *)"DIG_V:",BLACK,background_color,12,0);
-        // LCD_ShowIntNum(48,20,digital_voltage,4,BLACK,background_color,12);
-        // LCD_ShowString(0,40,(const u8 *)"ANA_V:",BLACK,background_color,12,0);
-        // LCD_ShowFloatNum1(48,40,analog_voltage,4,BLACK,background_color,12);
-        // LCD_ShowString(0,60,(const u8 *)"ANGLE:",BLACK,background_color,12,0);
-        // LCD_ShowFloatNum1(37, 60, angle, 5, BLACK, background_color, 12);
-        LCD_ShowIntNum(0, 0, key1_num, 3, BLACK, background_color, 12);
-        LCD_ShowIntNum(0, 20, key2_num, 3, BLACK, background_color, 12);        
-        LCD_ShowIntNum(0, 40, key3_num, 3, BLACK, background_color, 12);
-        LCD_ShowIntNum(0, 60, key4_num, 3, BLACK, background_color, 12);
-        if (motor_direction)
-        {
-            LCD_ShowString(0, 80, "right", BLACK, background_color, 12, 0);
-        }
-        else {
-            LCD_ShowString(0, 80, "left", BLACK, background_color, 12, 0);
-        }
-        LCD_ShowString(0, 100, "n:", BLACK, background_color, 12, 0);
-        LCD_ShowFloatNum1(13, 100, n_speed, 3, BLACK, background_color, 12);
+//         /*显示*/
+//         // LCD_ShowString(0,20,(const u8 *)"DIG_V:",BLACK,background_color,12,0);
+//         // LCD_ShowIntNum(48,20,digital_voltage,4,BLACK,background_color,12);
+//         // LCD_ShowString(0,40,(const u8 *)"ANA_V:",BLACK,background_color,12,0);
+//         // LCD_ShowFloatNum1(48,40,analog_voltage,4,BLACK,background_color,12);
+//         // LCD_ShowString(0,60,(const u8 *)"ANGLE:",BLACK,background_color,12,0);
+//         // LCD_ShowFloatNum1(37, 60, angle, 5, BLACK, background_color, 12);
+//         LCD_ShowIntNum(0, 0, key1_num, 3, BLACK, background_color, 12);
+//         LCD_ShowIntNum(0, 20, key2_num, 3, BLACK, background_color, 12);        
+//         LCD_ShowIntNum(0, 40, key3_num, 3, BLACK, background_color, 12);
+//         LCD_ShowIntNum(0, 60, key4_num, 3, BLACK, background_color, 12);
+//         if (motor_direction)
+//         {
+//             LCD_ShowString(0, 80, "right", BLACK, background_color, 12, 0);
+//         }
+//         else {
+//             LCD_ShowString(0, 80, "left", BLACK, background_color, 12, 0);
+//         }
+//         LCD_ShowString(0, 100, "n:", BLACK, background_color, 12, 0);
+//         LCD_ShowFloatNum1(13, 100, n_speed, 3, BLACK, background_color, 12);
         
-    }
+//     }
     
 }
 void ADC_voltage_INST_IRQHandler(void)
